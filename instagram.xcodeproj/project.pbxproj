@@ -9,23 +9,25 @@
 /* Begin PBXBuildFile section */
 		81435D6024DA772A002CEB85 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81435D5F24DA772A002CEB85 /* AppDelegate.swift */; };
 		81435D6224DA772A002CEB85 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81435D6124DA772A002CEB85 /* SceneDelegate.swift */; };
-		81435D6424DA772A002CEB85 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81435D6324DA772A002CEB85 /* ContentView.swift */; };
+		81435D6424DA772A002CEB85 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81435D6324DA772A002CEB85 /* HomeView.swift */; };
 		81435D6624DA772C002CEB85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81435D6524DA772C002CEB85 /* Assets.xcassets */; };
 		81435D6924DA772C002CEB85 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81435D6824DA772C002CEB85 /* Preview Assets.xcassets */; };
 		81435D6C24DA772C002CEB85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81435D6A24DA772C002CEB85 /* LaunchScreen.storyboard */; };
 		81435D7524DA7AAC002CEB85 /* PhotoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81435D7424DA7AAC002CEB85 /* PhotoRow.swift */; };
+		81B893CA24DBA24000F477B4 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B893C924DBA24000F477B4 /* AppView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		81435D5C24DA772A002CEB85 /* instagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81435D5F24DA772A002CEB85 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		81435D6124DA772A002CEB85 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		81435D6324DA772A002CEB85 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		81435D6324DA772A002CEB85 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		81435D6524DA772C002CEB85 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		81435D6824DA772C002CEB85 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		81435D6B24DA772C002CEB85 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		81435D6D24DA772C002CEB85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		81435D7424DA7AAC002CEB85 /* PhotoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRow.swift; sourceTree = "<group>"; };
+		81B893C924DBA24000F477B4 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +63,7 @@
 				81435D7324DA7A65002CEB85 /* home */,
 				81435D5F24DA772A002CEB85 /* AppDelegate.swift */,
 				81435D6124DA772A002CEB85 /* SceneDelegate.swift */,
-				81435D6324DA772A002CEB85 /* ContentView.swift */,
+				81B893C924DBA24000F477B4 /* AppView.swift */,
 				81435D6524DA772C002CEB85 /* Assets.xcassets */,
 				81435D6A24DA772C002CEB85 /* LaunchScreen.storyboard */,
 				81435D6D24DA772C002CEB85 /* Info.plist */,
@@ -81,6 +83,7 @@
 		81435D7324DA7A65002CEB85 /* home */ = {
 			isa = PBXGroup;
 			children = (
+				81435D6324DA772A002CEB85 /* HomeView.swift */,
 				81435D7424DA7AAC002CEB85 /* PhotoRow.swift */,
 			);
 			path = home;
@@ -96,12 +99,15 @@
 				81435D5824DA772A002CEB85 /* Sources */,
 				81435D5924DA772A002CEB85 /* Frameworks */,
 				81435D5A24DA772A002CEB85 /* Resources */,
+				81EA992A24DBDDA800E99AE9 /* Lint & Format script */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = instagram;
+			packageProductDependencies = (
+			);
 			productName = instagram;
 			productReference = 81435D5C24DA772A002CEB85 /* instagram.app */;
 			productType = "com.apple.product-type.application";
@@ -130,6 +136,8 @@
 				Base,
 			);
 			mainGroup = 81435D5324DA772A002CEB85;
+			packageReferences = (
+			);
 			productRefGroup = 81435D5D24DA772A002CEB85 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -152,6 +160,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		81EA992A24DBDDA800E99AE9 /* Lint & Format script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Lint & Format script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# cd BuildTools\nSDKROOT=macosx\n\nswift run --package-path BuildTools swift-format --mode format -r ./instagram -i\n\nswift run --package-path BuildTools swift-format --mode lint -r ./instagram\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		81435D5824DA772A002CEB85 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -159,7 +188,8 @@
 			files = (
 				81435D6024DA772A002CEB85 /* AppDelegate.swift in Sources */,
 				81435D6224DA772A002CEB85 /* SceneDelegate.swift in Sources */,
-				81435D6424DA772A002CEB85 /* ContentView.swift in Sources */,
+				81435D6424DA772A002CEB85 /* HomeView.swift in Sources */,
+				81B893CA24DBA24000F477B4 /* AppView.swift in Sources */,
 				81435D7524DA7AAC002CEB85 /* PhotoRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
