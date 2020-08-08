@@ -31,9 +31,7 @@ struct AppView: View {
           DispatchQueue.main.async {
             self.showModal.toggle()
           }
-
           self.selectedItem = self.oldSelectedItem
-
         }.tabItem {
           Image(systemName: "plus.app")
         }
@@ -55,7 +53,7 @@ struct AppView: View {
         .onAppear { self.oldSelectedItem = self.selectedItem }
     }
     .sheet(isPresented: self.$showModal) {
-      Text("Camera View")
+      AddView()
     }
   }
 }
