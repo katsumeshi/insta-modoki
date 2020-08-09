@@ -18,6 +18,8 @@
 		81EA992D24DE54E900E99AE9 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EA992C24DE54E900E99AE9 /* AddView.swift */; };
 		81EA992F24DE576200E99AE9 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EA992E24DE576200E99AE9 /* GalleryView.swift */; };
 		81EA993224DE6B2500E99AE9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EA993124DE6B2500E99AE9 /* Utils.swift */; };
+		81EA993424DF03C800E99AE9 /* GarallyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EA993324DF03C800E99AE9 /* GarallyViewModel.swift */; };
+		81EA993724DF04D400E99AE9 /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81EA993624DF04D400E99AE9 /* PhotoAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		81EA992C24DE54E900E99AE9 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		81EA992E24DE576200E99AE9 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		81EA993124DE6B2500E99AE9 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		81EA993324DF03C800E99AE9 /* GarallyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarallyViewModel.swift; sourceTree = "<group>"; };
+		81EA993624DF04D400E99AE9 /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,7 @@
 		81435D5E24DA772A002CEB85 /* instagram */ = {
 			isa = PBXGroup;
 			children = (
+				81EA993524DF04BB00E99AE9 /* services */,
 				81EA993024DE6B1100E99AE9 /* utils */,
 				81EA992B24DE54C100E99AE9 /* add */,
 				81435D7324DA7A65002CEB85 /* home */,
@@ -102,6 +107,7 @@
 			children = (
 				81EA992C24DE54E900E99AE9 /* AddView.swift */,
 				81EA992E24DE576200E99AE9 /* GalleryView.swift */,
+				81EA993324DF03C800E99AE9 /* GarallyViewModel.swift */,
 			);
 			path = add;
 			sourceTree = "<group>";
@@ -112,6 +118,14 @@
 				81EA993124DE6B2500E99AE9 /* Utils.swift */,
 			);
 			path = utils;
+			sourceTree = "<group>";
+		};
+		81EA993524DF04BB00E99AE9 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				81EA993624DF04D400E99AE9 /* PhotoAPI.swift */,
+			);
+			path = services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,7 +216,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# cd BuildTools\nSDKROOT=macosx\n\nswift run --package-path BuildTools swift-format --mode format -r ./instagram -i\n\nswift run --package-path BuildTools swift-format --mode lint -r ./instagram\n\n";
+			shellScript = "SDKROOT=macosx\n\nswift run --package-path BuildTools swift-format --mode format -r ./instagram -i\n\nswift run --package-path BuildTools swift-format --mode lint -r ./instagram\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -214,9 +228,11 @@
 				81EA992F24DE576200E99AE9 /* GalleryView.swift in Sources */,
 				81435D6024DA772A002CEB85 /* AppDelegate.swift in Sources */,
 				81435D6224DA772A002CEB85 /* SceneDelegate.swift in Sources */,
+				81EA993724DF04D400E99AE9 /* PhotoAPI.swift in Sources */,
 				81EA992D24DE54E900E99AE9 /* AddView.swift in Sources */,
 				81435D6424DA772A002CEB85 /* HomeView.swift in Sources */,
 				81B893CA24DBA24000F477B4 /* AppView.swift in Sources */,
+				81EA993424DF03C800E99AE9 /* GarallyViewModel.swift in Sources */,
 				81435D7524DA7AAC002CEB85 /* PhotoRow.swift in Sources */,
 				81EA993224DE6B2500E99AE9 /* Utils.swift in Sources */,
 			);
@@ -286,7 +302,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -340,7 +356,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
