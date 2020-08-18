@@ -18,13 +18,19 @@ enum PhotoAPIError: Error {
 
 final class PhotoAPI: ObservableObject {
   private let imageManager = PHCachingImageManager()
-  private var thumbNailsize: CGSize
+  static let thumbnailSize = CGSize(
+    width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
 
-  init(size: CGSize = .zero) {
-    thumbNailsize = size
+  private var options: PHImageRequestOptions {
+    let options = PHImageRequestOptions()
+    options.isNetworkAccessAllowed = true
+    options.isSynchronous = true
+    return options
   }
 
-  func fetchGallaryData() -> AnyPublisher<PHFetchResult<PHAsset>, PhotoAPIError> {
+  init() {}
+
+  func fetchGallaryData(size: CGSize) -> AnyPublisher<PHFetchResult<PHAsset>, PhotoAPIError> {
     return Future { promise in
       let status = PHPhotoLibrary.authorizationStatus()
       if status == .denied || status == .restricted {
@@ -35,12 +41,10 @@ final class PhotoAPI: ObservableObject {
             let imageAsset = PHAsset.fetchAssets(with: .image, options: nil)
             DispatchQueue.main.async {
               promise(.success(imageAsset))
-              let options = PHImageRequestOptions()
-              options.isNetworkAccessAllowed = true
               self.imageManager.startCachingImages(
                 for: imageAsset.objects(at: IndexSet(0...imageAsset.count - 1)),
-                targetSize: self.thumbNailsize,
-                contentMode: .aspectFill, options: options)
+                targetSize: size,
+                contentMode: .aspectFit, options: self.options)
             }
           }
         }
@@ -49,64 +53,23 @@ final class PhotoAPI: ObservableObject {
     .eraseToAnyPublisher()
   }
 
-  func fetchUIImage(asset: PHAsset) -> AnyPublisher<UIImage, PhotoAPIError> {
-    return Future { promise in
-      let options = PHImageRequestOptions()
-      options.isNetworkAccessAllowed = true
-      self.imageManager.requestImage(
-        for: asset,
-        targetSize: PHImageManagerMaximumSize,
-        contentMode: .aspectFit, options: .none
-      ) { (image, info) in
-        if let image = image {
-          promise(.success(image))
-        }
-        promise(.failure(.fetchImageError))
+  func fetchUIImage(
+    asset: PHAsset, size: CGSize
+  ) -> AnyPublisher<UIImage, Never> {
+    let subject = CurrentValueSubject<UIImage, Never>(UIImage())
+    self.imageManager.requestImage(
+      for: asset,
+      targetSize: size,
+      contentMode: .aspectFit, options: self.options
+    ) { (image, info) in
+      if let image = image {
+        subject.send(image)
       }
     }
-    .eraseToAnyPublisher()
+    return subject.eraseToAnyPublisher()
   }
 
   deinit {
     print("PhotoAPI released")
   }
-
-  //  private func fetchUIImage(asset: PHAsset) {
-  //    let manager = PHImageManager.default()
-  //    let options = PHImageRequestOptions()
-  //    options.deliveryMode = .fastFormat
-  //    options.isNetworkAccessAllowed = true
-  //
-  //    manager.requestImage(
-  //      for: asset,
-  //      targetSize: PHImageManagerMaximumSize,
-  //      contentMode: .aspectFit, options: .none
-  //    ) { (image, info) in
-  //      if let key = info?["PHImageResultRequestIDKey"] as? Int, let image = image {
-  //        self.nameSubject.send((key, image))
-  //      }
-  //    }
-  //
-  //    //    manager.requestImageDataAndOrientation(for: asset, options: options) { data, _, _, info in
-  //    //      if let key = info?["PHImageResultRequestIDKey"] as? Int, let data = data {
-  //    //        //        promise.
-  //    //        //        Just((key, data)).scan(
-  //    //        //              [:],
-  //    //        //              { acc, current -> [Int: Data] in
-  //    //        //                var acc = acc
-  //    //        //                acc[current.0] = current.1
-  //    //        //                return acc
-  //    //        //              }
-  //    //        //        self.imageDataWithKey[key] = data
-  //    //        self.nameSubject.send((key, data))
-  //    //        //            DispatchQueue.main.async {
-  //    //        //              self.imageDatas = self.imageDataWithKey
-  //    //        //                .sorted { $0.0 < $1.0 }
-  //    //        //                .map { $0.value }
-  //    //        //            }
-  //    //
-  //    //      }
-  //    //    }
-  //
-  //  }
 }

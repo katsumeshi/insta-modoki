@@ -11,24 +11,27 @@ import Photos
 import SwiftUI
 
 struct GalleryCellView: View {
-  //  var asset: PHAsset?
   @ObservedObject private var viewModel: GarallyCellViewModel
-  //    = GarallyCellViewModel(viewModel: nil)
-  //  var parentViewModel: GarallyViewModel?
-  //    @ObservedObject var photos
-  //    private var bag = Set<AnyCancellable>()
-  let width: CGFloat
+  private let width: CGFloat
 
-  init(asset: PHAsset?, photos: PhotoAPI, width: CGFloat = .zero) {
-    viewModel = GarallyCellViewModel(asset: asset, photos: photos)
+  init(asset: PHAsset?, photos: PhotoAPI, width: CGFloat = .zero, preview: Bool = false) {
+    if preview {
+      viewModel = GarallyCellViewModel(
+        asset: asset, photos: photos, size: PHImageManagerMaximumSize)
+    } else {
+      viewModel = GarallyCellViewModel(
+        asset: asset, photos: photos, size: GarallyViewModel.actualThumbnailSize)
+    }
     self.width = width
   }
 
   var body: some View {
     Image(uiImage: viewModel.uiImage)
       .resizable()
+      .aspectRatio(contentMode: .fill)
       .frame(width: self.width, height: self.width)
       .border(Color.secondary, width: 1)
+      .clipped()
     //          .overlay(Rectangle().fill(Color.white).opacity(self.getOp(i: i, j: j)))
 
   }

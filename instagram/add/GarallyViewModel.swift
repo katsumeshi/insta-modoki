@@ -16,14 +16,16 @@ final class GarallyViewModel: ObservableObject {
 
   static let columnNum: CGFloat = 4
   static let thumbNailWidth = UIScreen.main.bounds.width / GarallyViewModel.columnNum
-  let thumbNailsize = CGSize(
+  static let thumbnailSize = CGSize(
     width: GarallyViewModel.thumbNailWidth, height: GarallyViewModel.thumbNailWidth)
+  static let actualThumbnailSize = CGSize(
+    width: GarallyViewModel.thumbNailWidth * 3, height: GarallyViewModel.thumbNailWidth * 3)
   var photos: PhotoAPI
   private var bag = Set<AnyCancellable>()
 
   init() {
-    photos = PhotoAPI(size: GalleryView.thumbnailSize)
-    photos.fetchGallaryData().sink(
+    photos = PhotoAPI()
+    photos.fetchGallaryData(size: GarallyViewModel.actualThumbnailSize).sink(
       receiveCompletion: { _ in
       },
       receiveValue: {

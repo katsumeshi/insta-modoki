@@ -14,19 +14,13 @@ final class GarallyCellViewModel: ObservableObject {
   var viewModel: GarallyViewModel?
   @Published var uiImage: UIImage = UIImage()
   private var bag = Set<AnyCancellable>()
+  private let subject = PassthroughSubject<UIImage, Never>()
 
-  init(asset: PHAsset?, photos: PhotoAPI) {
-
+  init(asset: PHAsset?, photos: PhotoAPI, size: CGSize) {
     if let asset = asset {
-      photos.fetchUIImage(asset: asset)
-        .sink(
-          receiveCompletion: { _ in
-          },
-          receiveValue: {
-            self.uiImage = $0
-          }
-        )
-        .store(in: &bag)
+      photos.fetchUIImage(asset: asset, size: size).sink(receiveValue: {
+        self.uiImage = $0
+      }).store(in: &bag)
     }
   }
 }

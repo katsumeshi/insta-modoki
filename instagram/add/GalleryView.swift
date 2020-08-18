@@ -14,19 +14,20 @@ import UIKit
 struct GalleryView: View {
   private let size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
   static let thumbnailSize = CGSize(
-    width: UIScreen.main.bounds.width / 4, height: UIScreen.main.bounds.width / 4)
+    width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
   @ObservedObject var viewModel = GarallyViewModel()
   private let width = UIScreen.main.bounds.width
   let cellWidth = UIScreen.main.bounds.width / 4
 
   var body: some View {
-    let y = self.viewModel.selectIndex / 4
-    let x = self.viewModel.selectIndex % 4
+    let y = viewModel.selectIndex / 4
+    let x = viewModel.selectIndex % 4
     let arr = Array(0...max(((viewModel.assets.count) - 1), 0)).chunked(into: 4)
     return NavigationView {
       VStack(spacing: 0) {
         if viewModel.assets.count > 0 {
-          GalleryCellView(asset: self.aaa(x: x, y: y), photos: self.viewModel.photos, width: width)
+          GalleryCellView(
+            asset: self.aaa(x: x, y: y), photos: self.viewModel.photos, width: width, preview: true)
           List {
             ForEach(0..<arr.count, id: \.self) { i in
               HStack(spacing: 0) {
@@ -37,6 +38,8 @@ struct GalleryView: View {
                       GalleryCellView(
                         asset: self.aaa(x: j, y: i), photos: self.viewModel.photos,
                         width: self.cellWidth)
+                      //                      Color.blue.frame(width: self.cellWidth, height: self.cellWidth).border(
+                      //                        Color.secondary, width: 1)
                     }
                   ).buttonStyle(PlainButtonStyle())
                 }
