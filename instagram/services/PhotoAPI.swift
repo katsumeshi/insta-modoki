@@ -18,10 +18,7 @@ enum PhotoAPIError: Error {
 
 final class PhotoAPI: ObservableObject {
   private let imageManager = PHCachingImageManager()
-  static let thumbnailSize = CGSize(
-    width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-
-  private var options: PHImageRequestOptions {
+  private static var options: PHImageRequestOptions {
     let options = PHImageRequestOptions()
     options.isNetworkAccessAllowed = true
     options.isSynchronous = true
@@ -44,7 +41,7 @@ final class PhotoAPI: ObservableObject {
               self?.imageManager.startCachingImages(
                 for: imageAsset.objects(at: IndexSet(0...imageAsset.count - 1)),
                 targetSize: size,
-                contentMode: .aspectFit, options: self?.options)
+                contentMode: .aspectFit, options: PhotoAPI.options)
             }
           }
         }
@@ -59,7 +56,22 @@ final class PhotoAPI: ObservableObject {
       for: asset,
       targetSize: size,
       contentMode: .aspectFit,
-      options: self.options
+      options: PhotoAPI.options
+    ) { (image, info) in
+      if let image = image {
+        subject.send(image)
+      }
+    }
+    return subject.eraseToAnyPublisher()
+  }
+
+  static func fetchMaxImage(asset: PHAsset) -> AnyPublisher<UIImage, Never> {
+    let subject = CurrentValueSubject<UIImage, Never>(UIImage())
+    PHImageManager.default().requestImage(
+      for: asset,
+      targetSize: PHImageManagerMaximumSize,
+      contentMode: .aspectFit,
+      options: PhotoAPI.options
     ) { (image, info) in
       if let image = image {
         subject.send(image)

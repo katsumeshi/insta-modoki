@@ -17,7 +17,7 @@ struct GalleryCellView: View {
   init(asset: PHAsset?, photos: PhotoAPI, width: CGFloat = .zero, preview: Bool = false) {
     if preview {
       viewModel = GarallyCellViewModel(
-        asset: asset, photos: photos, size: PHImageManagerMaximumSize)
+        asset: asset, photos: photos, size: GarallyViewModel.previewSize)
     } else {
       viewModel = GarallyCellViewModel(
         asset: asset, photos: photos, size: GarallyViewModel.actualThumbnailSize)

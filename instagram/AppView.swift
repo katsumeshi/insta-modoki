@@ -12,6 +12,7 @@ struct AppView: View {
   @State private var selectedItem = 1
   @State private var oldSelectedItem = 1
   @State private var showModal = false
+
   var body: some View {
     TabView(selection: $selectedItem) {
       HomeView()
@@ -51,9 +52,8 @@ struct AppView: View {
         }
         .tag(5)
         .onAppear { self.oldSelectedItem = self.selectedItem }
-    }
-    .sheet(isPresented: self.$showModal) {
-      AddView()
+    }.sheet(isPresented: self.$showModal) {
+      GalleryView(showModal: self.$showModal)
     }
   }
 }

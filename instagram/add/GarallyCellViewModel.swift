@@ -11,10 +11,8 @@ import Photos
 import UIKit.UIImage
 
 final class GarallyCellViewModel: ObservableObject {
-  var viewModel: GarallyViewModel?
   @Published var uiImage: UIImage = UIImage()
   private var bag = Set<AnyCancellable>()
-  private let subject = PassthroughSubject<UIImage, Never>()
 
   init(asset: PHAsset?, photos: PhotoAPI, size: CGSize) {
     if let asset = asset {

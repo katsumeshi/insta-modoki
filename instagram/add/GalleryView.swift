@@ -15,36 +15,50 @@ struct GalleryView: View {
   @Environment(\.presentationMode) var presentationMode
   @ObservedObject var viewModel = GarallyViewModel()
   private let width = UIScreen.main.bounds.width
+  @Binding var showModal: Bool
 
   var body: some View {
 
     return NavigationView {
-      VStack(spacing: 0) {
-        if viewModel.assets.count > 0 {
-          GalleryCellView(
-            asset: self.viewModel.getAssetFromIndex(),
-            photos: self.viewModel.photos, width: width, preview: true)
-          List {
-            ForEach(0..<self.viewModel.grid2dArr.count, id: \.self) { y in
-              GalleryRowView(viewModel: self.viewModel, y: y)
+      TabView(selection: $viewModel.selectedTabItem) {
+        VStack(spacing: 0) {
+          if viewModel.assets.count > 0 {
+            GalleryCellView(
+              asset: self.viewModel.getAssetFromIndex(),
+              photos: self.viewModel.photos, width: width, preview: true)
+            List {
+              ForEach(0..<self.viewModel.grid2dArr.count, id: \.self) { y in
+                GalleryRowView(viewModel: self.viewModel, y: y)
+              }
             }
           }
         }
+        .tabItem {
+          Text("GALLERY")
+        }
+        .tag(1)
+        Text("PHOTO")
+          .tabItem {
+            Text("PHOTO")
+          }
+          .tag(2)
       }.navigationBarTitle("Gallary", displayMode: .inline)
         .navigationBarItems(
           leading: Button(action: {
             self.presentationMode.wrappedValue.dismiss()
           }) {
             Image(systemName: "xmark")
-          },
+          }.buttonStyle(PlainButtonStyle()),
           trailing:
-            Button("Next") {
-              print("Help tapped!")
+            NavigationLink(
+              destination: PostView(image: viewModel.previewImage, showModal: $showModal)
+            ) {
+              Text("Next")
             }
         )
     }
-  }
 
+  }
 }
 
 private struct GalleryRowView: View {
@@ -55,7 +69,7 @@ private struct GalleryRowView: View {
     HStack(spacing: 0) {
       ForEach(0..<viewModel.grid2dArr[y].count, id: \.self) { x in
         Button(
-          action: { self.viewModel.selectIndex = (self.y * 4) + x },
+          action: { self.viewModel.selectIndex = (self.y * Int(GarallyViewModel.columnNum)) + x },
           label: {
             GalleryCellView(
               asset: self.viewModel.getAsset(x: x, y: self.y), photos: self.viewModel.photos,
@@ -68,8 +82,9 @@ private struct GalleryRowView: View {
 }
 
 struct GalleryView_Previews: PreviewProvider {
-  static var previews: some View {
-    GalleryView()
+  @State static var value = false
 
+  static var previews: some View {
+    GalleryView(showModal: $value)
   }
 }
