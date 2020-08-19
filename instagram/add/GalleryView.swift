@@ -12,44 +12,31 @@ import SwiftUI
 import UIKit
 
 struct GalleryView: View {
-  private let size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-  static let thumbnailSize = CGSize(
-    width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+  @Environment(\.presentationMode) var presentationMode
   @ObservedObject var viewModel = GarallyViewModel()
   private let width = UIScreen.main.bounds.width
-  let cellWidth = UIScreen.main.bounds.width / 4
 
   var body: some View {
-    let y = viewModel.selectIndex / 4
-    let x = viewModel.selectIndex % 4
-    let arr = Array(0...max(((viewModel.assets.count) - 1), 0)).chunked(into: 4)
+
     return NavigationView {
       VStack(spacing: 0) {
         if viewModel.assets.count > 0 {
           GalleryCellView(
-            asset: self.aaa(x: x, y: y), photos: self.viewModel.photos, width: width, preview: true)
+            asset: self.viewModel.getAssetFromIndex(),
+            photos: self.viewModel.photos, width: width, preview: true)
           List {
-            ForEach(0..<arr.count, id: \.self) { i in
-              HStack(spacing: 0) {
-                ForEach(0..<arr[i].count, id: \.self) { j in
-                  Button(
-                    action: { self.viewModel.selectIndex = (i * 4) + j },
-                    label: {
-                      GalleryCellView(
-                        asset: self.aaa(x: j, y: i), photos: self.viewModel.photos,
-                        width: self.cellWidth)
-                      //                      Color.blue.frame(width: self.cellWidth, height: self.cellWidth).border(
-                      //                        Color.secondary, width: 1)
-                    }
-                  ).buttonStyle(PlainButtonStyle())
-                }
-              }.listRowInsets(.init())
+            ForEach(0..<self.viewModel.grid2dArr.count, id: \.self) { y in
+              GalleryRowView(viewModel: self.viewModel, y: y)
             }
           }
         }
       }.navigationBarTitle("Gallary", displayMode: .inline)
         .navigationBarItems(
-          leading: Image(systemName: "xmark"),
+          leading: Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+          }) {
+            Image(systemName: "xmark")
+          },
           trailing:
             Button("Next") {
               print("Help tapped!")
@@ -58,8 +45,25 @@ struct GalleryView: View {
     }
   }
 
-  private func aaa(x: Int, y: Int) -> PHAsset? {
-    return self.viewModel.assets.object(at: (y * 4) + x)
+}
+
+private struct GalleryRowView: View {
+  var viewModel: GarallyViewModel
+  var y: Int = 0
+
+  var body: some View {
+    HStack(spacing: 0) {
+      ForEach(0..<viewModel.grid2dArr[y].count, id: \.self) { x in
+        Button(
+          action: { self.viewModel.selectIndex = (self.y * 4) + x },
+          label: {
+            GalleryCellView(
+              asset: self.viewModel.getAsset(x: x, y: self.y), photos: self.viewModel.photos,
+              width: GarallyViewModel.thumbNailWidth)
+          }
+        ).buttonStyle(PlainButtonStyle())
+      }
+    }.listRowInsets(.init())
   }
 }
 

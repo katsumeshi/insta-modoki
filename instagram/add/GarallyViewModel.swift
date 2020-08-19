@@ -13,6 +13,7 @@ import SwiftUI
 final class GarallyViewModel: ObservableObject {
   @Published var selectIndex: Int = 0
   @Published var assets: PHFetchResult<PHAsset> = PHFetchResult()
+  @Published var grid2dArr: [[Int]] = []
 
   static let columnNum: CGFloat = 4
   static let thumbNailWidth = UIScreen.main.bounds.width / GarallyViewModel.columnNum
@@ -28,16 +29,28 @@ final class GarallyViewModel: ObservableObject {
     photos.fetchGallaryData(size: GarallyViewModel.actualThumbnailSize).sink(
       receiveCompletion: { _ in
       },
-      receiveValue: {
-        self.assets = $0
+      receiveValue: { [weak self] in
+        self?.assets = $0
+        self?.grid2dArr = Array(0...max((($0.count) - 1), 0)).chunked(
+          into: Int(GarallyViewModel.columnNum))
       }
     )
     .store(in: &bag)
 
   }
 
+  func getAssetFromIndex() -> PHAsset? {
+    return getAsset(
+      x: selectIndex % Int(GarallyViewModel.columnNum),
+      y: selectIndex / Int(GarallyViewModel.columnNum))
+  }
+
+  func getAsset(x: Int, y: Int) -> PHAsset? {
+    return assets.object(at: (y * Int(GarallyViewModel.columnNum)) + x)
+  }
+
   deinit {
-    print("released GarallyViewModel")
+    print("GarallyViewModel released")
   }
 
 }

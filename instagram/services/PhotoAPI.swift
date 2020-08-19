@@ -39,12 +39,12 @@ final class PhotoAPI: ObservableObject {
         PHPhotoLibrary.requestAuthorization { (authStatus) in
           if authStatus == .authorized {
             let imageAsset = PHAsset.fetchAssets(with: .image, options: nil)
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
               promise(.success(imageAsset))
-              self.imageManager.startCachingImages(
+              self?.imageManager.startCachingImages(
                 for: imageAsset.objects(at: IndexSet(0...imageAsset.count - 1)),
                 targetSize: size,
-                contentMode: .aspectFit, options: self.options)
+                contentMode: .aspectFit, options: self?.options)
             }
           }
         }
@@ -53,14 +53,13 @@ final class PhotoAPI: ObservableObject {
     .eraseToAnyPublisher()
   }
 
-  func fetchUIImage(
-    asset: PHAsset, size: CGSize
-  ) -> AnyPublisher<UIImage, Never> {
+  func fetchUIImage(asset: PHAsset, size: CGSize) -> AnyPublisher<UIImage, Never> {
     let subject = CurrentValueSubject<UIImage, Never>(UIImage())
     self.imageManager.requestImage(
       for: asset,
       targetSize: size,
-      contentMode: .aspectFit, options: self.options
+      contentMode: .aspectFit,
+      options: self.options
     ) { (image, info) in
       if let image = image {
         subject.send(image)

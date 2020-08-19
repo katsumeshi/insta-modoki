@@ -18,9 +18,15 @@ final class GarallyCellViewModel: ObservableObject {
 
   init(asset: PHAsset?, photos: PhotoAPI, size: CGSize) {
     if let asset = asset {
-      photos.fetchUIImage(asset: asset, size: size).sink(receiveValue: {
-        self.uiImage = $0
-      }).store(in: &bag)
+      photos.fetchUIImage(asset: asset, size: size)
+        .sink(receiveValue: { [weak self] in
+          self?.uiImage = $0
+        })
+        .store(in: &bag)
     }
+  }
+
+  deinit {
+    print("GarallyCellViewModel released")
   }
 }
