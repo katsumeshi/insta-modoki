@@ -26,3 +26,7 @@ DerivedData/
 /*.gcno
 
 .build/
+
+GoogleService-Info.plist
+
+Pods/
