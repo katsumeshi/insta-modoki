@@ -7,4 +7,10 @@ target 'instagram' do
 
   # Pods for instagram
   pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Storage'
+  pod 'GoogleSignIn'
+  
 end
