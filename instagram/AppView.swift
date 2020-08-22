@@ -46,7 +46,7 @@ struct AppView: View {
         }
         .tag(4)
         .onAppear { self.oldSelectedItem = self.selectedItem }
-      HomeView()
+      ProfileView()
         .tabItem {
           Image(systemName: "person")
         }

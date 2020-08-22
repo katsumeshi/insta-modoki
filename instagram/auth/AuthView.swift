@@ -6,12 +6,22 @@
 //  Copyright © 2020 Yuki Matsushita. All rights reserved.
 //
 
-import GoogleSignIn
 import SwiftUI
 
 struct AuthView: View {
   @ObservedObject var viewModel = AuthViewModel()
   var body: some View {
+    Group {
+      if viewModel.session == nil {
+        content
+      } else {
+        AppView()
+      }
+    }
+  }
+
+  var content: some View {
+
     NavigationView {
       VStack {
         Spacer()
@@ -41,9 +51,7 @@ struct AuthView: View {
             HorizontalLine(color: .secondary)
           }
           Button(action: {
-            GIDSignIn.sharedInstance()?.presentingViewController =
-              UIApplication.shared.windows.first!.rootViewController
-            GIDSignIn.sharedInstance().signIn()
+            self.viewModel.signIn()
           }) {
             HStack {
               Image("google")
