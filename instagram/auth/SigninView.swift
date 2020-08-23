@@ -8,42 +8,19 @@
 
 import SwiftUI
 
-struct AuthView: View {
-  @ObservedObject var viewModel = AuthViewModel()
+struct SigninView: View {
+  @ObservedObject var viewModel = SigninViewModel()
   var body: some View {
-    Group {
-      if viewModel.session == nil {
-        content
-      } else {
-        AppView()
-      }
-    }
-  }
-
-  var content: some View {
-
     NavigationView {
       VStack {
         Spacer()
         VStack {
           Text("Instagram").font(.largeTitle)
-          VStack {
-            TextField("Email", text: $viewModel.email).padding(8)
-          }.background(Color.secondarySystemBackground)
-            .cornerRadius(6)
-          VStack {
-            SecureField("Password", text: $viewModel.password).padding(8)
-          }.background(Color.secondarySystemBackground)
-            .cornerRadius(6)
-          VStack {
-            NavigationLink(destination: AppView()) {
-              Text("Log In").fontWeight(.semibold)
-                .frame(minWidth: 0, maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .foregroundColor(.white)
-            }
-          }.background(Color.blue)
-            .cornerRadius(6)
+          TextField("Email", text: $viewModel.email).style()
+          SecureField("Password", text: $viewModel.password).style()
+          NavigationLink(destination: AppView()) {
+            Text("Log In").style()
+          }
 
           HStack {
             HorizontalLine(color: .secondary)
@@ -51,7 +28,7 @@ struct AuthView: View {
             HorizontalLine(color: .secondary)
           }
           Button(action: {
-            self.viewModel.signIn()
+            SessionStore.signIn()
           }) {
             HStack {
               Image("google")
@@ -65,7 +42,9 @@ struct AuthView: View {
           Divider()
           HStack {
             Text("Don't have an account?").foregroundColor(.secondary)
-            Text("Sign up.")
+            NavigationLink(destination: SignupView()) {
+              Text("Sign up.")
+            }
           }
         }
       }.navigationBarHidden(true)
@@ -76,9 +55,9 @@ struct AuthView: View {
   }
 }
 
-struct AuthView_Previews: PreviewProvider {
+struct SigninView_Previews: PreviewProvider {
   static var previews: some View {
-    AuthView()
+    SigninView()
   }
 }
 

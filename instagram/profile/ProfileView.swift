@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ProfileView: View {
   var body: some View {
-    Button(action: { AuthViewModel.signOut() }) {
+    Button(action: { SessionStore.signOut() }) {
       Text("Sign Out")
     }
   }

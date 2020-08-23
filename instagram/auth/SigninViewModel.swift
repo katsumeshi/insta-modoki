@@ -11,66 +11,75 @@ import FirebaseAuth
 import Foundation
 import GoogleSignIn
 
-class User {
-  var uid: String
-  var email: String?
-  var displayName: String?
+//class User {
+//  var uid: String
+//  var email: String?
+//  var displayName: String?
+//
+//  init(uid: String, displayName: String?, email: String?) {
+//    self.uid = uid
+//    self.email = email
+//    self.displayName = displayName
+//  }
+//
+//}
+//
+//enum AuthState {
+//  case unknown
+//  case authrized
+//  case unauthrized
+//}
 
-  init(uid: String, displayName: String?, email: String?) {
-    self.uid = uid
-    self.email = email
-    self.displayName = displayName
-  }
-
-}
-
-final class AuthViewModel: ObservableObject {
+final class SigninViewModel: ObservableObject {
   @Published var email = ""
   @Published var password = ""
   @Published var session: User?
+  //  @Published var authState: AuthState = .unknown
   var handle: AuthStateDidChangeListenerHandle?
 
-  init() {
-    listen()
-  }
+  //  init() {
+  //    listen()
+  //  }
 
-  func signIn() {
-    GIDSignIn.sharedInstance()?.presentingViewController =
-      UIApplication.shared.windows.first!.rootViewController
-    GIDSignIn.sharedInstance().signIn()
-  }
-
-  static func signOut() {
-    do {
-      try Auth.auth().signOut()
-    } catch {
-      print("something erorr")
-    }
-  }
-
-  func listen() {
-    // monitor authentication changes using firebase
-    handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-      if let user = user {
-        // if we have a user, create a new user model
-        print("Got user: \(user)")
-        self.session = User(
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email
-        )
-      } else {
-        // if we don't have a user, set our session to nil
-        self.session = nil
-      }
-    }
-  }
-
-  func unbind() {
-    if let handle = handle {
-      Auth.auth().removeStateDidChangeListener(handle)
-    }
-  }
+  //  func signIn() {
+  //    GIDSignIn.sharedInstance()?.presentingViewController =
+  //      UIApplication.shared.windows.first!.rootViewController
+  //    GIDSignIn.sharedInstance().signIn()
+  //  }
+  //
+  //  func listen() {
+  //    // monitor authentication changes using firebase
+  //    handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+  //      if let user = user {
+  //        // if we have a user, create a new user model
+  //        print("Got user: \(user)")
+  //        self.session = User(
+  //          uid: user.uid,
+  //          displayName: user.displayName,
+  //          email: user.email
+  //        )
+  //        self.authState = .authrized
+  //      } else {
+  //        // if we don't have a user, set our session to nil
+  //        self.session = nil
+  //        self.authState = .unauthrized
+  //      }
+  //    }
+  //  }
+  //
+  //  static func signOut() {
+  //    do {
+  //      try Auth.auth().signOut()
+  //    } catch {
+  //      print("something erorr")
+  //    }
+  //  }
+  //
+  //  func unbind() {
+  //    if let handle = handle {
+  //      Auth.auth().removeStateDidChangeListener(handle)
+  //    }
+  //  }
   //  @Published var selectIndex: Int = 0
   //  @Published var assets: PHFetchResult<PHAsset> = PHFetchResult()
   //  @Published var grid2dArr: [[Int]] = []
