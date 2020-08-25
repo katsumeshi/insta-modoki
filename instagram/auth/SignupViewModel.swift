@@ -11,69 +11,85 @@ import SwiftUI
 
 final class SignupViewModel: ObservableObject {
   @Published var email = ""
-  @Published var emailError = ""
   @Published var password = ""
   @Published var confirmPassword = ""
-  @Published var passwordError = ""
-  @Published var canCreate = false
+  @Published private(set) var emailError = ""
+  @Published private(set) var passwordError = ""
+  @Published private(set) var canCreate = false
 
   private var bag = Set<AnyCancellable>()
 
   init() {
-    $email.sink { [weak self] in
+
+    emailValidation().sink { [weak self] in
       guard let self = self else { return }
-      if $0.count == 0 {
-        self.emailError = ""
-      } else if !self.isValidEmail($0) {
-        self.emailError = "Password is invalid"
-      } else {
-        self.emailError = ""
+      self.emailError = ""
+      if $0 == .invalid {
+        self.emailError = "Email is invalid"
       }
     }.store(in: &bag)
 
-    Publishers.CombineLatest($password, $confirmPassword).sink(receiveValue: {
-      [weak self] password, confirmPassword in
+    passwordValidation().sink { [weak self] in
       guard let self = self else { return }
-      if password.isEmpty && confirmPassword.isEmpty {
-        self.passwordError = ""
+      self.passwordError = ""
+      if $0 == .notMatch {
+        self.passwordError = "Password is not match"
+      } else if $0 == .less {
+        self.passwordError = "Password should be more than 6 characters"
+      }
+    }.store(in: &bag)
+
+    Publishers.CombineLatest(emailValidation(), passwordValidation()).map {
+      $0.0 == .valid && $0.1 == .valid
+    }.sink { [weak self] in
+      guard let self = self else { return }
+      self.canCreate = $0
+    }.store(in: &bag)
+  }
+
+  private enum EmailValidation {
+    case zero
+    case valid
+    case invalid
+  }
+
+  private func emailValidation() -> AnyPublisher<EmailValidation, Never> {
+    return self.$email.map {
+      if $0.count == 0 {
+        return .zero
+      } else if self.isValidEmail($0) {
+        return .valid
+      }
+      return .invalid
+    }.eraseToAnyPublisher()
+  }
+
+  private enum PasswordValidation {
+    case zero
+    case valid
+    case less
+    case notMatch
+  }
+
+  private func passwordValidation() -> AnyPublisher<PasswordValidation, Never> {
+    return Publishers.CombineLatest($password, $confirmPassword).map {
+      password, confirmPassword in
+      if password.count == 0 && confirmPassword.count == 0 {
+        return .zero
+      } else if password.count < 6 {
+        return .less
       } else if password != confirmPassword {
-        self.passwordError = "passwords are not match"
-      } else if password.count <= 6 {
-        self.passwordError = "password should be more than 6 charactors"
-      } else {
-        self.passwordError = ""
+        return .notMatch
       }
-    }).store(in: &bag)
-
-    let hasEmail = $email.map { $0.count > 0 }
-    let hasPassword = $password.map { $0.count > 0 }
-    let hasConfirmPassword = $confirmPassword.map { $0.count > 0 }
-    let noEmailError = $emailError.map { $0.count == 0 }
-    let noPasswordError = $passwordError.map { $0.count == 0 }
-
-    let hasAll = Publishers.CombineLatest3(hasEmail, hasPassword, hasConfirmPassword).map {
-      $0.0 && $0.1 && $0.2
-    }
-
-    let noAll = Publishers.CombineLatest(noEmailError, noPasswordError).map {
-      $0.0 && $0.1
-    }
-
-    Publishers.CombineLatest(hasAll, noAll).sink(receiveValue: {
-      [weak self] in
-      guard let self = self else { return }
-      self.canCreate = false
-      if $0.0 && $0.1 {
-        self.canCreate = true
-      }
-    }).store(in: &bag)
+      return .valid
+    }.eraseToAnyPublisher()
   }
 
   func createAccount() {
     SessionStore.createAccount(email: email, password: password)
   }
 
-  func isValidEmail(_ email: String) -> Bool {
+  private func isValidEmail(_ email: String) -> Bool {
     let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
 
     let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)

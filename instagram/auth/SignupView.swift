@@ -12,11 +12,11 @@ struct SignupView: View {
   @ObservedObject var viewModel = SignupViewModel()
   var body: some View {
     VStack {
-      TextField("Email", text: $viewModel.email).style()
-      Text(viewModel.emailError).errorStyle()
+      InputField(placeHolder: "Email", text: $viewModel.email, error: viewModel.emailError)
       SecureField("Password", text: $viewModel.password).style()
-      SecureField("Confirm Password", text: $viewModel.confirmPassword).style()
-      Text(viewModel.passwordError).errorStyle()
+      InputField(
+        placeHolder: "Confirm Password", type: .secure, text: $viewModel.confirmPassword,
+        error: viewModel.passwordError)
       Button(action: { self.viewModel.createAccount() }) {
         Text("Create").style()
       }.disabled(!viewModel.canCreate)

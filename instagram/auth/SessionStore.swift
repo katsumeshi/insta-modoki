@@ -6,6 +6,7 @@
 //  Copyright © 2020 Yuki Matsushita. All rights reserved.
 //
 
+import Combine
 import FirebaseAuth
 import Foundation
 import GoogleSignIn
@@ -27,28 +28,30 @@ final class SessionStore: ObservableObject {
 
   func listen() {
     // monitor authentication changes using firebase
-    handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+    handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
+      guard let self = self else { return }
       if let user = user {
-        // if we have a user, create a new user model
-        print("Got user: \(user)")
-        //          self.session = User(
-        //            uid: user.uid,
-        //            displayName: user.displayName,
-        //            email: user.email
-        //          )
         self.authState = .authrized
       } else {
-        // if we don't have a user, set our session to nil
-        //          self.session = nil
         self.authState = .unauthrized
       }
     }
   }
 
+  static func signInWithEmail(email: String, password: String) -> AnyPublisher<String, Never> {
+    return Future { promise in
+      Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+        if let errStr = error?.localizedDescription {
+          promise(.success(errStr))
+        }
+      }
+    }.eraseToAnyPublisher()
+  }
+
   static func signIn() {
     GIDSignIn.sharedInstance()?.presentingViewController =
       UIApplication.shared.windows.first!.rootViewController
-    GIDSignIn.sharedInstance().signIn()
+    GIDSignIn.sharedInstance()?.signIn()
   }
 
   static func createAccount(email: String, password: String) {

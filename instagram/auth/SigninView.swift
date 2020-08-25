@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct SigninView: View {
-  @ObservedObject var viewModel = SigninViewModel()
+  @ObservedObject private var viewModel = SigninViewModel()
+
   var body: some View {
     NavigationView {
       VStack {
@@ -18,9 +19,12 @@ struct SigninView: View {
           Text("Instagram").font(.largeTitle)
           TextField("Email", text: $viewModel.email).style()
           SecureField("Password", text: $viewModel.password).style()
-          NavigationLink(destination: AppView()) {
+          Button(action: {
+            self.viewModel.signInWithEmail()
+          }) {
             Text("Log In").style()
-          }
+          }.buttonStyle(PlainButtonStyle())
+            .disabled(viewModel.loginDisable)
 
           HStack {
             HorizontalLine(color: .secondary)
@@ -51,6 +55,13 @@ struct SigninView: View {
         .frame(minHeight: 0, maxHeight: .infinity)
         .padding(.vertical)
         .edgesIgnoringSafeArea([.top, .bottom])
+        .alert(
+          isPresented: Binding(
+            get: { self.viewModel.alert },
+            set: { self.viewModel.alert = $0 })
+        ) {
+          Alert(title: Text(self.viewModel.signinError))
+        }
     }
   }
 }
