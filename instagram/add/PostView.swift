@@ -6,6 +6,7 @@
 //  Copyright © 2020 Yuki Matsushita. All rights reserved.
 //
 
+import FirebaseStorage
 import Photos
 import SwiftUI
 
@@ -32,6 +33,7 @@ struct PostView: View {
       trailing:
         Button(action: {
           self.showModal = false
+          FileUtils.upload(image: self.image)
         }) {
           Text("Share")
         }
