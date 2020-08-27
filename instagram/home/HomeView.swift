@@ -9,10 +9,11 @@
 import SwiftUI
 
 struct HomeView: View {
+  @ObservedObject var viewModel = HomeViewModel()
   var body: some View {
     List {
-      ForEach(0..<10, id: \.self) { _ in
-        PhotoRow().listRowInsets(EdgeInsets())
+      ForEach(viewModel.posts) { post in
+        PhotoRow(post: post).listRowInsets(EdgeInsets())
       }
     }
   }

@@ -6,15 +6,17 @@
 //  Copyright © 2020 Yuki Matsushita. All rights reserved.
 //
 
+import SDWebImageSwiftUI
 import SwiftUI
 
 struct PhotoRow: View {
+  var post: Post
   var body: some View {
-    VStack {
+    return VStack {
       HeaderView()
-      Image("cat").resizable().scaledToFit()
+      WebImage(url: URL(string: post.url)).resizable().scaledToFit()
       ActionView()
-      DescriptionView()
+      DescriptionView(comment: post.comment)
     }.padding(.vertical)
   }
 }
@@ -64,12 +66,12 @@ struct ActionView: View {
 }
 
 struct DescriptionView: View {
+  var comment: String
   var body: some View {
     VStack(alignment: .leading) {
       HStack(alignment: .top) {
         Text("yuki").bold()
-          + Text(
-            " test test test test test test test test test test test test test test test test ")
+          + Text(comment)
         Spacer()
       }.padding()
       Text("View all 5 comments").padding(.horizontal)
@@ -79,6 +81,6 @@ struct DescriptionView: View {
 
 struct PhotoRow_Previews: PreviewProvider {
   static var previews: some View {
-    PhotoRow()
+    PhotoRow(post: Post())
   }
 }

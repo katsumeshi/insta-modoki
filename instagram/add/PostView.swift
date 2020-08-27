@@ -33,7 +33,7 @@ struct PostView: View {
       trailing:
         Button(action: {
           self.showModal = false
-          FileUtils.upload(image: self.image)
+          FileUtils.upload(image: self.image, comment: self.text)
         }) {
           Text("Share")
         }
