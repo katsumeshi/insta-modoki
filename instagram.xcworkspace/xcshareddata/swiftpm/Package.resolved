@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Resolver",
+        "repositoryURL": "https://github.com/hmlongco/Resolver.git",
+        "state": {
+          "branch": null,
+          "revision": "cb5b4e1e60046120de87fee14af257e07ad74a62",
+          "version": "1.1.4"
+        }
+      },
+      {
         "package": "SDWebImage",
         "repositoryURL": "https://github.com/SDWebImage/SDWebImage.git",
         "state": {
@@ -17,6 +26,15 @@
           "branch": null,
           "revision": "4c7f169e39bc35d6b80d42b8eb8301bee9cd0907",
           "version": "1.5.0"
+        }
+      },
+      {
+        "package": "Introspect",
+        "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect.git",
+        "state": {
+          "branch": null,
+          "revision": "de5c32c15ae169cfcb27397ffb2734dcd0e1e6d5",
+          "version": "0.1.0"
         }
       }
     ]

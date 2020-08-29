@@ -35,18 +35,18 @@ final class GarallyViewModel: ObservableObject {
         self?.assets = $0
         self?.grid2dArr = Array(0...max((($0.count) - 1), 0)).chunked(
           into: Int(GarallyViewModel.columnNum))
-        self?.setPreviewImage()
+        self?.setPreviewImage(index: self?.selectIndex ?? 0)
       }
     )
     .store(in: &bag)
 
-    $selectIndex.sink(receiveValue: { [weak self] _ in
-      self?.setPreviewImage()
+    $selectIndex.sink(receiveValue: { [weak self] index in
+      self?.setPreviewImage(index: index)
     }).store(in: &bag)
   }
 
-  private func setPreviewImage() {
-    if let asset = self.getAssetFromIndex() {
+  private func setPreviewImage(index: Int) {
+    if let asset = self.getAssetFromIndex(index: index) {
       self.photos.fetchUIImage(asset: asset, size: PHImageManagerMaximumSize)
         .sink(receiveValue: { [weak self] in
           self?.previewImage = $0
@@ -54,10 +54,10 @@ final class GarallyViewModel: ObservableObject {
     }
   }
 
-  func getAssetFromIndex() -> PHAsset? {
+  func getAssetFromIndex(index: Int) -> PHAsset? {
     return getAsset(
-      x: selectIndex % Int(GarallyViewModel.columnNum),
-      y: selectIndex / Int(GarallyViewModel.columnNum))
+      x: index % Int(GarallyViewModel.columnNum),
+      y: index / Int(GarallyViewModel.columnNum))
   }
 
   func getAsset(x: Int, y: Int) -> PHAsset? {

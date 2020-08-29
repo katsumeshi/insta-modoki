@@ -21,7 +21,7 @@ struct AppView: View {
         }
         .tag(1)
         .onAppear { self.oldSelectedItem = self.selectedItem }
-      HomeView()
+      SearchView()
         .tabItem {
           Image(systemName: "magnifyingglass")
         }
@@ -40,7 +40,7 @@ struct AppView: View {
         .onTapGesture {
           print("aaaaaa")
         }
-      HomeView()
+      FavoriteView()
         .tabItem {
           Image(systemName: "heart")
         }

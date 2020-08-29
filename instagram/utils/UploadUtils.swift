@@ -16,7 +16,8 @@ struct Post: Identifiable {
   var id = UUID()
   var url: String = ""
   var comment: String = ""
-  var created: Date = Date()
+  var created: NSNumber = 0
+  var updated: NSNumber = 0
 }
 
 class FileUtils {
@@ -42,29 +43,35 @@ class FileUtils {
             guard let downloadURL = url?.absoluteString else {
               return
             }
-            db.collection("posts").addDocument(data: [
-              "url": downloadURL, "comment": comment, "created": Date(),
+            let timestamp = Date().timeIntervalSince1970
+            db.collection(uid).addDocument(data: [
+              "url": downloadURL, "comment": comment, "created": timestamp, "updated": timestamp,
             ])
           }
         })
     }
   }
 
-  static func fetch() -> AnyPublisher<Post?, Never> {
-    let subject = CurrentValueSubject<Post?, Never>(nil)
-    let posts = db.collection("posts").order(by: "created", descending: true).limit(to: 10)
-    posts.getDocuments { (querySnapshot, err) in
-      if let err = err {
-        print("Error getting documents: \(err)")
-      } else {
-        for document in querySnapshot!.documents {
-          let data = document.data()
-          let post = Post(
-            url: data["url"] as! String, comment: data["comment"] as! String, created: Date())
-          subject.send(post)
-        }
-      }
-    }
-    return subject.eraseToAnyPublisher()
-  }
+  //  static func fetch() -> AnyPublisher<Post?, Never> {
+  //    let subject = CurrentValueSubject<Post?, Never>(nil)
+  //    let posts = db.collection(uid).whereField("updated", isGreaterThan: 0)
+  //      .order(by: "updated", descending: true)
+  //      .limit(to: 10)
+  //    posts.getDocuments { (querySnapshot, err) in
+  //      print(querySnapshot?.metadata.description)
+  //      if let err = err {
+  //        print("Error getting documents: \(err)")
+  //      } else {
+  //        for document in querySnapshot!.documents {
+  //          let data = document.data()
+  //          let post = Post(
+  //            url: data["url"] as! String, comment: data["comment"] as! String,
+  //            created: data["created"] as! NSNumber, updated: data["updated"] as! NSNumber)
+  //          subject.send(post)
+  //        }
+  //      }
+  //      //      ts = Int(Date().timeIntervalSince1970)
+  //    }
+  //    return subject.eraseToAnyPublisher()
+  //  }
 }

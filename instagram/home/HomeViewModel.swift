@@ -10,16 +10,38 @@ import Combine
 import FirebaseAuth
 import Foundation
 import GoogleSignIn
+import Resolver
 
-final class HomeViewModel: ObservableObject {
+final class HomeViewModel: NSObject, ObservableObject {
   @Published var posts: [Post] = []
+  @Injected var repository: PostsRepository
+  var fetched = false
 
   private var bag = Set<AnyCancellable>()
 
-  init() {
-    FileUtils.fetch().sink(receiveValue: {
+  override init() {
+    super.init()
+    repository.fetch().sink(receiveValue: {
       guard let post = $0 else { return }
       self.posts += [post]
     }).store(in: &bag)
   }
+}
+
+extension HomeViewModel: UIScrollViewDelegate {
+
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    if scrollView.contentSize.height - scrollView.contentOffset.y - scrollView.frame.height < 100 {
+      // only 100 pt are left from the bottom
+      if !fetched {
+        repository.fetch().sink(receiveValue: {
+          guard let post = $0 else { return }
+          self.posts += [post]
+          self.fetched = false
+        }).store(in: &bag)
+        fetched = true
+      }
+    }
+  }
+
 }

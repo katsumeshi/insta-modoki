@@ -24,7 +24,7 @@ struct GalleryView: View {
         VStack(spacing: 0) {
           if viewModel.assets.count > 0 {
             GalleryCellView(
-              asset: self.viewModel.getAssetFromIndex(),
+              asset: self.viewModel.getAssetFromIndex(index: viewModel.selectIndex),
               photos: self.viewModel.photos, width: width, preview: true)
             List {
               ForEach(0..<self.viewModel.grid2dArr.count, id: \.self) { y in

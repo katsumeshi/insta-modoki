@@ -32,8 +32,6 @@ struct GalleryCellView: View {
       .frame(width: self.width, height: self.width)
       .border(Color.secondary, width: 1)
       .clipped()
-    //          .overlay(Rectangle().fill(Color.white).opacity(self.getOp(i: i, j: j)))
-
   }
 }
 
