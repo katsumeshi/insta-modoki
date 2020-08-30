@@ -19,6 +19,6 @@ final class ProfileViewModel: ObservableObject {
   }
 
   func onAppear() {
-    posts = repository.get()
+//    posts = repository.get()
   }
 }

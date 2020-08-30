@@ -15,35 +15,27 @@ import Resolver
 final class HomeViewModel: NSObject, ObservableObject {
   @Published var posts: [Post] = []
   @Injected var repository: PostsRepository
-  private var fetched = false
+  private var feching = false
 
   private var bag = Set<AnyCancellable>()
 
   override init() {
         super.init()
     fetchOld()
+    repository.get().sink(receiveValue: {
+        self.posts = $0
+        self.feching = false
+    }).store(in: &bag)
   }
     
      func fetchOld() {
-        if !fetched {
-            repository.fetchOld().sink(receiveValue: {
-              guard let post = $0 else { return }
-              self.posts += [post]
-                self.fetched = false
-            }).store(in: &bag)
-            fetched = true
-        }
+        feching = true
+        repository.fetchOld()
     }
     
     func fetchNew() {
-           if !fetched {
-               repository.fetchNew().sink(receiveValue: {
-                 guard let post = $0 else { return }
-                 self.posts = [post] + self.posts
-                   self.fetched = false
-               }).store(in: &bag)
-               fetched = true
-           }
+        feching = true
+        repository.fetchNew()
     }
 
   deinit {
@@ -54,7 +46,7 @@ final class HomeViewModel: NSObject, ObservableObject {
 extension HomeViewModel: UIScrollViewDelegate {
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    if scrollView.contentSize.height - scrollView.contentOffset.y - scrollView.frame.height < 100 {
+    if !feching && scrollView.contentSize.height - scrollView.contentOffset.y - scrollView.frame.height < 100 {
         fetchOld()
     }
   }
