@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		81000E6B24FB3DDC0031069E /* SwiftUIRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 81000E6A24FB3DDC0031069E /* SwiftUIRefresh */; };
 		8107920F24DFACD5003683C1 /* GarallyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8107920E24DFACD5003683C1 /* GarallyCellViewModel.swift */; };
 		8107921124DFAD65003683C1 /* GalleryCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8107921024DFAD65003683C1 /* GalleryCellView.swift */; };
 		8125122224F0E2C10001CC3F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8125122124F0E2C10001CC3F /* ProfileView.swift */; };
@@ -104,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81000E6B24FB3DDC0031069E /* SwiftUIRefresh in Frameworks */,
 				818897AE24FA05F10037ADC0 /* Resolver in Frameworks */,
 				818897BC24FA3FE30037ADC0 /* Introspect in Frameworks */,
 				81394E5724F77004001CD680 /* SDWebImageSwiftUI in Frameworks */,
@@ -308,6 +310,7 @@
 				81394E5624F77004001CD680 /* SDWebImageSwiftUI */,
 				818897AD24FA05F10037ADC0 /* Resolver */,
 				818897BB24FA3FE30037ADC0 /* Introspect */,
+				81000E6A24FB3DDC0031069E /* SwiftUIRefresh */,
 			);
 			productName = instagram;
 			productReference = 81435D5C24DA772A002CEB85 /* instagram.app */;
@@ -341,6 +344,7 @@
 				81394E5524F77004001CD680 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				818897AC24FA05F10037ADC0 /* XCRemoteSwiftPackageReference "Resolver" */,
 				818897BA24FA3FE30037ADC0 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
+				81000E6924FB3DDC0031069E /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */,
 			);
 			productRefGroup = 81435D5D24DA772A002CEB85 /* Products */;
 			projectDirPath = "";
@@ -390,7 +394,7 @@
 		};
 		81EA992A24DBDDA800E99AE9 /* Lint & Format script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -402,7 +406,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "SDKROOT=macosx\n\nswift run --package-path BuildTools swift-format --mode format -r ./instagram -i\n\nswift run --package-path BuildTools swift-format --mode lint -r ./instagram\n\n";
 		};
@@ -681,6 +685,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		81000E6924FB3DDC0031069E /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/timbersoftware/SwiftUIRefresh.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.3;
+			};
+		};
 		81394E5524F77004001CD680 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -708,6 +720,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		81000E6A24FB3DDC0031069E /* SwiftUIRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 81000E6924FB3DDC0031069E /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */;
+			productName = SwiftUIRefresh;
+		};
 		81394E5624F77004001CD680 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 81394E5524F77004001CD680 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;

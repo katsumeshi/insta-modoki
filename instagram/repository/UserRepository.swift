@@ -60,7 +60,7 @@ class UserRepositoryImpl: UserRepository {
         let data = document.data()
         let post = Post(
           url: data["url"] as! String, comment: data["comment"] as! String,
-          created: data["created"] as! NSNumber, updated: data["updated"] as! NSNumber)
+          created: data["created"] as! Double, updated: data["updated"] as! Double)
         self.posts.append(post)
         subject.send(post)
       }

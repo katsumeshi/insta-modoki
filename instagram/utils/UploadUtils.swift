@@ -16,8 +16,8 @@ struct Post: Identifiable {
   var id = UUID()
   var url: String = ""
   var comment: String = ""
-  var created: NSNumber = 0
-  var updated: NSNumber = 0
+  var created: Double = 0
+  var updated: Double = 0
 }
 
 class FileUtils {

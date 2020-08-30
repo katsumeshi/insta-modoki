@@ -15,8 +15,8 @@ import Resolver
 
 protocol PostsRepository {
   func get() -> [Post]
-  func fetch() -> AnyPublisher<Post?, Never>
-  //    func upload() -> AnyPublisher<Void, Error>
+  func fetchOld() -> AnyPublisher<Post?, Never>
+  func fetchNew() -> AnyPublisher<Post?, Never>
 }
 extension Resolver {
   public static func registerPostsRepository() {
@@ -27,36 +27,58 @@ extension Resolver {
 }
 
 class PostsRepositoryImpl: PostsRepository {
+    
 
   private let storage = Storage.storage()
   private let uid = Auth.auth().currentUser?.uid ?? ""
   private let db = Firestore.firestore()
   private var follwingPosts: [Post] = []
+    
+    private var oldTimestamp: Double = Date().timeIntervalSince1970
+  private var newTimestamp: Double = Date().timeIntervalSince1970
 
   private var query: Query?
 
   init() {
     query = db.collection(uid)
-      .order(by: "updated")
-      .limit(to: 1)
+        .whereField("updated", isLessThan: oldTimestamp)
+        .order(by: "updated", descending: true)
+        .limit(to: 1)
   }
 
   func get() -> [Post] {
     return follwingPosts
   }
+    
+  func fetchOld() -> AnyPublisher<Post?, Never> {
+    let q = self.db.collection(self.uid)
+        .whereField("updated", isLessThan: oldTimestamp)
+        .order(by: "updated", descending: true)
+        .limit(to: 1)
+    return fetch(nextQuery: q).map {
+        self.oldTimestamp = min(self.oldTimestamp, $0?.updated ?? 0)
+        return $0
+    }.eraseToAnyPublisher()
+  }
+    
+    func fetchNew() -> AnyPublisher<Post?, Never> {
+        let q = self.db.collection(self.uid)
+            .whereField("updated", isGreaterThan: newTimestamp)
+            .order(by: "updated", descending: true)
+            .limit(to: 1)
+        return fetch(nextQuery: q).map {
+            self.newTimestamp = max(self.newTimestamp, $0?.updated ?? 0)
+            return $0
+        }.eraseToAnyPublisher()
+    }
+    
+   private func fetch(nextQuery: Query) -> AnyPublisher<Post?, Never> {
+    let subject = PassthroughSubject<Post?, Never>()
 
-  func fetch() -> AnyPublisher<Post?, Never> {
-    let subject = CurrentValueSubject<Post?, Never>(nil)
-
-    query?.getDocuments { [weak self] (snapshot, error) in
+    nextQuery.getDocuments { [weak self] (snapshot, error) in
       guard let self = self else { return }
       guard let snapshot = snapshot else {
         print("Error retreving cities: \(error.debugDescription)")
-        return
-      }
-
-      guard let lastSnapshot = snapshot.documents.last else {
-        // The collection is empty.
         return
       }
 
@@ -64,20 +86,9 @@ class PostsRepositoryImpl: PostsRepository {
         let data = document.data()
         let post = Post(
           url: data["url"] as! String, comment: data["comment"] as! String,
-          created: data["created"] as! NSNumber, updated: data["updated"] as! NSNumber)
-        self.follwingPosts.append(post)
+          created: data["created"] as! Double, updated: data["updated"] as! Double)
         subject.send(post)
       }
-
-      // Construct a new query starting after this document,
-      // retrieving the next 25 cities.
-      self.query = self.db.collection(self.uid)
-        .order(by: "updated")
-        .limit(to: 1)
-        .start(afterDocument: lastSnapshot)
-
-      // Use the query for pagination.
-      // ...
     }
     return subject.eraseToAnyPublisher()
   }

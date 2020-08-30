@@ -9,10 +9,11 @@
 import Introspect
 import SwiftUI
 import UIKit
+import SwiftUIRefresh
 
 struct HomeView: View {
   @ObservedObject var viewModel = HomeViewModel()
-  //  @State var helper = DelegateHelper()
+    @State var isRefreshing = false
   var body: some View {
     List {
       ForEach(viewModel.posts) { post in
@@ -20,7 +21,12 @@ struct HomeView: View {
       }
     }.introspectScrollView(customize: {
       $0.delegate = self.viewModel
-    })
+    }).pullToRefresh(isShowing: $isRefreshing) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            viewModel.fetchNew()
+            self.isRefreshing = false
+        }
+    }
   }
 }
 

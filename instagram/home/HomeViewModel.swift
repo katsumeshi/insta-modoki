@@ -15,16 +15,39 @@ import Resolver
 final class HomeViewModel: NSObject, ObservableObject {
   @Published var posts: [Post] = []
   @Injected var repository: PostsRepository
-  var fetched = false
+  private var fetched = false
 
   private var bag = Set<AnyCancellable>()
 
   override init() {
-    super.init()
-    repository.fetch().sink(receiveValue: {
-      guard let post = $0 else { return }
-      self.posts += [post]
-    }).store(in: &bag)
+        super.init()
+    fetchOld()
+  }
+    
+     func fetchOld() {
+        if !fetched {
+            repository.fetchOld().sink(receiveValue: {
+              guard let post = $0 else { return }
+              self.posts += [post]
+                self.fetched = false
+            }).store(in: &bag)
+            fetched = true
+        }
+    }
+    
+    func fetchNew() {
+           if !fetched {
+               repository.fetchNew().sink(receiveValue: {
+                 guard let post = $0 else { return }
+                 self.posts = [post] + self.posts
+                   self.fetched = false
+               }).store(in: &bag)
+               fetched = true
+           }
+    }
+
+  deinit {
+    print("remove HomeViewModel")
   }
 }
 
@@ -32,15 +55,7 @@ extension HomeViewModel: UIScrollViewDelegate {
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     if scrollView.contentSize.height - scrollView.contentOffset.y - scrollView.frame.height < 100 {
-      // only 100 pt are left from the bottom
-      if !fetched {
-        repository.fetch().sink(receiveValue: {
-          guard let post = $0 else { return }
-          self.posts += [post]
-          self.fetched = false
-        }).store(in: &bag)
-        fetched = true
-      }
+        fetchOld()
     }
   }
 
