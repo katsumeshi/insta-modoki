@@ -10,11 +10,13 @@ import SwiftUI
 
 struct ProfileView: View {
   @ObservedObject private var viewModel: ProfileViewModel = ProfileViewModel()
+    @State private var isActive = false
 
   var body: some View {
-    VStack {
-      HStack {
-        VStack {
+    NavigationView {
+    VStack(spacing: 0) {
+        HStack(spacing: 0) {
+            VStack(spacing: 0) {
           Image("cat")
             .resizable()
             .frame(width: 40, height: 40)
@@ -35,18 +37,23 @@ struct ProfileView: View {
           Text("357").bold()
           Text("Following")
         }
-      }
+        }.frame(minWidth: 0, maxWidth: .infinity)
+        .background(Color.green)
       Button(action: {}) {
         Text("Edit Profile")
       }
       Button(action: { SessionStore.signOut() }) {
         Text("Sign Out")
       }
-
-      GridView(grid2dArr: viewModel.posts.map { $0.url }.chunked(into: 4))
-    }.onAppear {
-      self.viewModel.onAppear()
+        NavigationLink(destination: HomeView(), isActive: $isActive) {
+          EmptyView()
+        }
+        GridView(grid2dArr: viewModel.posts.map { $0.url }.chunked(into: 3), column: 3) {
+            isActive = $0 >= 0
+        }
     }
+    .navigationBarTitle("Profile", displayMode: .inline)
+  }
   }
 }
 

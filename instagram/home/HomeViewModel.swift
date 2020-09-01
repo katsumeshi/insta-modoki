@@ -21,7 +21,7 @@ final class HomeViewModel: NSObject, ObservableObject {
 
   override init() {
         super.init()
-    fetchOld()
+//    fetchOld()
     repository.get().sink(receiveValue: {
         self.posts = $0
         self.feching = false

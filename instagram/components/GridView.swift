@@ -11,48 +11,45 @@ import SwiftUI
 
 struct GridView: View {
   var grid2dArr: [[String]]
-  private let column = 4
+    var column: Int
+    var didClick: (_ position: Int) -> Void
 
   var body: some View {
-    List {
+    ScrollView {
+        
+
+        LazyVStack(alignment: .leading, spacing: 0) {
       ForEach(0..<grid2dArr.count, id: \.self) { y in
-        GridRowView(
-          row: self.grid2dArr[y],
-          width: UIScreen.main.bounds.width / CGFloat(self.column))
+        GridCellView(y: y, width: UIScreen.main.bounds.width / CGFloat(self.column))
       }
+        }
     }
   }
-}
-
-private struct GridRowView: View {
-  var row: [String]
-  var width: CGFloat
-
-  var body: some View {
-    HStack(spacing: 0) {
-      ForEach(0..<row.count, id: \.self) { x in
-        GridCellView(imageUrl: self.row[x], width: self.width)
+    func GridCellView(y: Int, width: CGFloat) -> some View {
+      LazyHStack(spacing: 0) {
+        ForEach(0..<grid2dArr[y].count, id: \.self) { x in
+            GridCellView(x: x, y: y, width: width)
+        }
       }
-    }.listRowInsets(.init())
-  }
-}
-
-private struct GridCellView: View {
-  var imageUrl: String
-  var width: CGFloat
-
-  var body: some View {
-    WebImage(url: URL(string: imageUrl))
-      .resizable()
-      .aspectRatio(contentMode: .fill)
-      .frame(width: self.width, height: self.width)
-      .border(Color.secondary, width: 1)
-      .clipped()
-  }
+    }
+    func GridCellView(x: Int, y: Int, width: CGFloat) -> some View {
+      Button(action: {
+          didClick(y * column + x)
+      }) {
+          WebImage(url: URL(string: grid2dArr[y][x]))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: width, height: width)
+            .border(Color.secondary, width: 1)
+            .clipped()
+      }
+    }
 }
 
 struct GridView_Previews: PreviewProvider {
   static var previews: some View {
-    GridView(grid2dArr: [])
+    GridView(grid2dArr: [], column: 3) {_ in 
+        
+    }
   }
 }

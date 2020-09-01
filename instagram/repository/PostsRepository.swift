@@ -18,6 +18,7 @@ protocol PostsRepository {
   func fetchOld()
   func fetchNew()
 }
+
 extension Resolver {
   public static func registerPostsRepository() {
     register { PostsRepositoryImpl() }
@@ -43,8 +44,7 @@ class PostsRepositoryImpl: PostsRepository {
     
   private static let fetchingCount = 3
 
-  init() {
-  }
+  init() {}
 
   func get() -> AnyPublisher<[Post], Never> {
     return subject.eraseToAnyPublisher()

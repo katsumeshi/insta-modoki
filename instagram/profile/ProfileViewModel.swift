@@ -6,19 +6,50 @@
 //  Copyright © 2020 Yuki Matsushita. All rights reserved.
 //
 
+
 import Combine
+import FirebaseAuth
+import Foundation
+import GoogleSignIn
 import Resolver
 
-final class ProfileViewModel: ObservableObject {
-  @Published var posts: [Post] = []
-  @Injected var repository: PostsRepository
+final class ProfileViewModel: NSObject, ObservableObject {
+  @Injected var repository: UserRepository
+    @Published var posts: [Post] = []
+    private var feching = false
 
-  private var bag = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
 
-  init() {
+    override init() {
+          super.init()
+      fetchOld()
+      repository.get().sink(receiveValue: {
+          self.posts = $0
+          self.feching = false
+      }).store(in: &bag)
+    }
+      
+       func fetchOld() {
+          feching = true
+          repository.fetchOld()
+      }
+      
+      func fetchNew() {
+          feching = true
+          repository.fetchNew()
+      }
+
+    deinit {
+      print("remove HomeViewModel")
+    }
   }
 
-  func onAppear() {
-//    posts = repository.get()
+  extension ProfileViewModel: UIScrollViewDelegate {
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+      if !feching && scrollView.contentSize.height - scrollView.contentOffset.y - scrollView.frame.height < 100 {
+          fetchOld()
+      }
+    }
+
   }
-}

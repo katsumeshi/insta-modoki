@@ -24,7 +24,7 @@ class FileUtils {
 
   private static let storage = Storage.storage()
   private static let uid = Auth.auth().currentUser?.uid ?? ""
-  private static let db = Firestore.firestore()
+  private static let usersRef = Firestore.firestore().collection("users")
 
   static func upload(image: UIImage, comment: String) {
 
@@ -44,7 +44,7 @@ class FileUtils {
               return
             }
             let timestamp = Date().timeIntervalSince1970
-            db.collection(uid).addDocument(data: [
+            usersRef.document(uid).collection("posts").addDocument(data: [
               "url": downloadURL, "comment": comment, "created": timestamp, "updated": timestamp,
             ])
           }

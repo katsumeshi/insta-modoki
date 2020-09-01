@@ -13,7 +13,7 @@ import SwiftUIRefresh
 
 struct HomeView: View {
   @ObservedObject var viewModel = HomeViewModel()
-    @State var isRefreshing = false
+  @State var isRefreshing = false
   var body: some View {
     List {
       ForEach(viewModel.posts) { post in
